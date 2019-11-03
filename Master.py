@@ -68,10 +68,9 @@ class GameMode(Mode):
         for col in range(len(mode.burrows)):
             for row in range(len(mode.burrows[col])):
                 if mode.burrows[col][row]:
-                    print(col,row)
                     cx = 16+col*32
                     cy = 16+row*32
-                    canvas.create_oval(cx-r,cy-r,cx+r,cy+r,fill="black")
+                    canvas.create_rectangle(cx-r,cy-r,cx+r,cy+r,fill="black")
 
     def redrawAll(mode,canvas):
         #drawCanvas()
