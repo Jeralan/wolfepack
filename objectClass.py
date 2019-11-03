@@ -1,35 +1,45 @@
 from tkinter import *
-
-def rgbString(red, green, blue):
-    # Don't worry about how this code works yet.
-    return "#%02x%02x%02x" % (red, green, blue)
+from PIL import Image,ImageTk
 
 class Particle(object):
-    def __init__(self, cx, cy):
+    def __init__(self, mode, cx, cy):
+        self.mode = mode
         self.cx = cx
         self.cy = cy
-        self.particleType = ''
-        self.fallRate = 3 # 1 particle size per timer fire
-        self.activated = False
+        self.id = mode.time
 
-        dust = rgbString(255, 194, 153)
-        self.allColors = []
-        self.color = dust
-        self.allColors.append(self.color)
+        spriteSheet = mode.app.loadImage('antSprites.png')
+        self.dir = 1
+        self.spriteIndex = 0
+        self.sprites = []
+        for i in range(4):
+            dirSprites = []
+            for j in range(4):
+                sprite = spriteSheet.crop((64 * i, 64 * j,
+                                           64 * (i + 1), 64 * (j + 1))
+                dirSprites.append(sprite)
+            self.sprites.append(dirSprites)
+        self.image = self.sprites[self.dir][self.spriteIndex]
+
     
     def getHashables(self):
-        return self.color #colors are unique per particle type
+        return self.id #colors are unique per particle type
 
     def __hash__(self):
         return hash(self.getHashables())
     
     def __eq__(self, other):
-        return ( type(other) == type(self) ) and \
-               (self.color == other.color)
+        return ( type(other) == type(self) ) and self.id == other.id
+
+    def check(self, other):
+        pass
 
     def move(self):
-        self.cy += self.fallRate
+        
+        # if self.collision():
+        #     pass
 
     def draw(self, canvas):
-        canvas.create_rectangle(cx - 1, cy - 1, cx + 1, cy + 1,
-                                fill = self.color)
+        canvas.create_rectangle(self.cx, self.cy, 
+                                self.cx+1, self.cy+1,
+                                fill = self.color, width=0)
