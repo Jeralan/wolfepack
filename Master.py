@@ -1,5 +1,5 @@
-import cmu_112_graphics
-import objectClass
+from cmu_112_graphics import *
+from objectClass import *
 from tkinter import *
 
 
@@ -9,22 +9,29 @@ class dustGame(ModalApp):
         app.gameMode = GameMode()
         app.helpMode = HelpMode()
         app.setActiveMode(app.splashScreenMode)
+        app.timerDelay = 25
 
 class GameMode(Mode):
-    def appStarted(app):
-        particles = []
+    def appStarted(mode):
+        mode.particles = []
+        mode.split = (2/3)*app.mode.height
 
-    def mousePressed(app):
-        particles.append(Particle(event.x,event.y))
+    def mousePressed(mode,event):
+        mode.particles.append(Particle(event.x,event.y))
+    
+    def mouseDragged(mode,event):
+        mode.particles.append(Particle(event.x,event.y))
 
-    def timerFired(app):
-        for particle in particles:
+    def timerFired(mode):
+        for particle in mode.particles:
             particle.move()
-
-    def reDrawAll(app,canvas):
-        drawCanvas()
-        for particle in particles:
-            particle.draw(canvas)
+            for OtherParticle in mode.particles:
+                if particle.collision(OtherParticle)
+    def redrawAll(mode,canvas):
+        #drawCanvas()
+        for particle in mode.particles:
+            particle.draw(canvas,mode)
+        
 
 class SplashScreenMode(Mode):
     def keyPressed(mode, event):
@@ -54,3 +61,12 @@ class SplashScreenMode(Mode):
 
 class HelpMode(Mode):
     pass
+
+def runWolfePack():
+    dustGame(width=600,height=600)
+
+def main():
+    runWolfePack()
+
+if __name__ == '__main__':
+    main()
