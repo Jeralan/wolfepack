@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import Image,ImageTk
+import random
 
 class Ant(object):
     def __init__(self, mode, cx, cy):
@@ -7,21 +8,23 @@ class Ant(object):
         self.cx = cx
         self.cy = cy
         self.id = mode.time
+        self.dy = 0
+        self.dx = 1
 
         spriteSheet = mode.app.loadImage('antSprites.png')
-
+        spriteSheet = mode.app.scaleImage(spriteSheet, 1/2)
         self.dir = 1
         self.spriteIndex = 0
         self.sprites = []
         for i in range(4):
             dirSprites = []
             for j in range(4):
-                sprite = spriteSheet.crop((64 * j, 64 * i,
-                                           64 * (j + 1), 64 * (i + 1)))
+                sprite = spriteSheet.crop((32 * j, 32 * i,
+                                           32 * (j + 1), 32 * (i + 1)))
                 dirSprites.append(sprite)
             self.sprites.append(dirSprites)
         self.image = self.sprites[self.dir][self.spriteIndex]
-        self.image = mode.app.scaleImage(self.image, 1/2)
+    
     def getHashables(self):
         return self.id #colors are unique per particle type
 
@@ -34,10 +37,23 @@ class Ant(object):
     def check(self, other):
         pass
 
-    #def move(self):
-        
-        # if self.collision():
-        #     pass
+    def move(self):
+        self.spriteIndex = (self.spriteIndex + 1) % 4
+        self.image = self.sprites[self.dir][self.spriteIndex]
+        self.cy += self.dy * 5 / 4
+        self.cx += self.dx * 5 / 4
+
+    def changeDir(self, mode):
+        newDir = random.randint(0, 3)
+        self.dir = newDir
+        if self.dir == 0:
+            self.dx, self.dy = 0, -1
+        elif self.dir == 1:
+            self.dx, self.dy = +1, 0
+        elif self.dir == 2:
+            self.dx, self.dy = 0, -1
+        elif self.dir == 3:
+            self.dx, self.dy = -1, 0
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, 
