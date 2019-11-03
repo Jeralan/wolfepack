@@ -59,18 +59,19 @@ class GameMode(Mode):
     def timerFired(mode):
         for ant in mode.ants:
             ant.move()
-            if (mode.time - ant.id) % 80 == 0:
+            if (mode.time - ant.id) % 32 == 0:
                 ant.changeDir(mode)
         mode.time += 1
         
-    def drawBurrows(mode):
+    def drawBurrows(mode,canvas):
         r = 17
-        # for col in range(len(mode.burrows())):
-        #     for row in range(len(col)):
-        #         if mode.burrows[col][row]:
-        #             cx = 16+col*32
-        #             cy = 16+row*32
-        #             canvas.create_oval(cx-r,cy-r,cx+r,)
+        for col in range(len(mode.burrows)):
+            for row in range(len(mode.burrows[col])):
+                if mode.burrows[col][row]:
+                    print(col,row)
+                    cx = 16+col*32
+                    cy = 16+row*32
+                    canvas.create_oval(cx-r,cy-r,cx+r,cy+r,fill="black")
 
     def redrawAll(mode,canvas):
         #drawCanvas()
@@ -79,7 +80,7 @@ class GameMode(Mode):
         canvas.create_rectangle(0,mode.dirt,
                 mode.app.width,mode.app.height,fill=rgbString(155,118,83))
         
-        mode.drawBurrows()
+        mode.drawBurrows(canvas)
         for ant in mode.ants:
             ant.draw(canvas)
 
