@@ -51,7 +51,7 @@ class Ant(object):
         elif self.dir == 1:
             self.dx, self.dy = +1, 0
         elif self.dir == 2:
-            self.dx, self.dy = 0, -1
+            self.dx, self.dy = 0, +1
         elif self.dir == 3:
             self.dx, self.dy = -1, 0
 
