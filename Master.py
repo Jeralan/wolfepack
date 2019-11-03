@@ -2,6 +2,13 @@ from cmu_112_graphics import *
 from objectClass import *
 from tkinter import *
 
+import decimal
+def roundHalfUp(d):
+    # Round to nearest with ties going away from zero.
+    rounding = decimal.ROUND_HALF_UP
+    # See other rounding options here:
+    # https://docs.python.org/3/library/decimal.html#rounding-modes
+    return int(decimal.Decimal(d).to_integral_value(rounding=rounding))
 
 class dustGame(ModalApp):
     def appStarted(app):
@@ -20,14 +27,14 @@ class GameMode(Mode):
     def appStarted(mode):
         mode.ants = []
         mode.time = 0
-        mode.dirt = 1/10
+        mode.dirt = 32
 
     def addAnt(mode,x,y):
         x,y = x-16,y-16
         x= roundHalfUp(x/32)*32
         y= roundHalfUp(y/32)*32
         x,y = x+16,y+16
-        if y < mode.app.height*mode.dirt:
+        if y < mode.dirt:
             mode.ants.append(Ant(mode,x,y))
 
     def mousePressed(mode,event):
@@ -35,14 +42,14 @@ class GameMode(Mode):
 
     def timerFired(mode):
         mode.time += 1
-        for ant in mode.ants:
-            ant.move()
+        #for ant in mode.ants:
+            #ant.move()
     
     def redrawAll(mode,canvas):
         #drawCanvas()
         canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
                             fill="blue")
-        canvas.create_rectangle(0,mode.app.height*mode.dirt,
+        canvas.create_rectangle(0,mode.dirt,
                 mode.app.width,mode.app.height,fill=rgbString(155,118,83))
         
         for ant in mode.ants:
@@ -64,6 +71,10 @@ class SplashScreenMode(Mode):
         #press h for help
         canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
                             fill="black")
+        canvas.create_text(mode.app.width/2,mode.app.height/2,
+                            text="(maximize screen pls)", 
+                            font = ('Comic Sans MS',30,'bold italic underline'),
+                            fill = "Yellow", anchor = "n")
         canvas.create_text(mode.app.width/2,mode.app.height/2,
                             text="Press any key to start!", 
                             font = "Arial 20 bold",
