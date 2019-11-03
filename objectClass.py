@@ -48,6 +48,7 @@ class Ant(object):
             if len(directions) == 1:
                 mode.ants.remove(self)
                 die = True
+                mode.deadAnts[gridX][gridY] = True
                 mode.antCount -= 1
                 break
             else:
@@ -65,7 +66,6 @@ class Ant(object):
                             image=self.image)
 
 def isPossible(mode,gridX,gridY):
-    print(len(mode.burrows[0]),len(mode.burrows))
     if gridX < 0 or gridY < 0 or gridY >= len(mode.burrows[0]) or gridX >= len(mode.burrows):
         return False
     elif mode.burrows[gridX][gridY]:
