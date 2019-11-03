@@ -26,6 +26,7 @@ import random
 import winsound
 class GameMode(Mode):
     def appStarted(mode):
+        mode.score = 0
         dirtImage = mode.app.loadImage('groundTexture.jpg')
         mode.dirtImage = mode.app.scaleImage(dirtImage, max(mode.app.height/1066,mode.app.width/1600))
         mode.dirtImage = ImageTk.PhotoImage(mode.dirtImage)
@@ -76,7 +77,7 @@ class GameMode(Mode):
 
     def timerFired(mode):
         print(mode.time)
-        if mode.time%(7200) == 0:
+        if mode.time%(4700) == 0:
             winsound.PlaySound("cmupie.wav",winsound.SND_ASYNC)
         mode.antCount = 0
         while mode.antCount < len(mode.ants):
@@ -103,7 +104,7 @@ class GameMode(Mode):
                 if mode.deadAnts[col][row]:
                     cx = 16+col*32
                     cy = 16+row*32
-                    canvas.loadImage(cx,cy,mode.deadImage)
+                    canvas.create_image(cx,cy,image=mode.deadImage)
 
     def redrawAll(mode,canvas):
         #drawCanvas()
@@ -114,6 +115,8 @@ class GameMode(Mode):
         mode.drawDeadAnts(canvas)
         for ant in mode.ants:
             ant.draw(canvas)
+        canvas.create_text(0,mode.app.height,text=f"Score: {mode.score}",font=('Comic Sans MS',30,'bold italic underline'),
+                            anchor = "sw")
 
         
         
