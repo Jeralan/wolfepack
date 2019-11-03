@@ -23,7 +23,7 @@ class GameMode(Mode):
         mode.dirt = 1/10
 
     def addAnt(mode,x,y):
-        mode.ants.append(Particle(mode,x,y))
+        mode.ants.append(Ant(mode,x,y))
 
     def mousePressed(mode,event):
         mode.addAnt(event.x,event.y)
