@@ -59,9 +59,7 @@ class Ant(object):
         self.dir = newDir
         self.dx,self.dy = newDx, newDy
         if (gridY+self.dy) >= 1 and not die:
-            if not mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)]:
-                mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
-                mode.score += 1
+            mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, 
@@ -88,3 +86,35 @@ def getCoords(newDir):
         elif newDir == 3:
             newDx, newDy = -1, 0
         return newDx,newDy
+
+
+class Worm(object):
+    def __init__(self, mode, cx, cy, selfID):
+        self.mode = mode
+        self.cx = cx
+        self.cy = cy
+        self.dy = -1
+        self.dx = 0
+        self.id = selfID
+
+        spriteSheet = mode.app.loadImage('wormSprites.png')
+        spriteSheet = mode.app.scaleImage(spriteSheet, 1/6)
+        self.dir = 1
+        self.spriteIndex = 0
+        self.sprites = mode.wormCrawl
+        self.image = self.sprites[self.spriteIndex]
+    
+    def getHashables(self):
+        return self.id #colors are unique per particle type
+
+    def __hash__(self):
+        return hash(self.getHashables())
+    
+    def __eq__(self, other):
+        return ( type(other) == type(self) ) and self.id == other.id
+
+    def move(self, mode):
+        self.spriteIndex = (self.spriteIndex + 1) % len(self.sprites)
+
+    def draw(self, canvas):
+        canvas.create_image(self.cx, self.cy, image=self.image, anchor='s')
