@@ -25,7 +25,7 @@ class GameMode(Mode):
     def addAnt(mode,x,y):
         x,y = x-16,y-16
         x= roundHalfUp(x/32)*32
-        y= roundHalfUp(x/32)*32
+        y= roundHalfUp(y/32)*32
         x,y = x+16,y+16
         if y < mode.app.height*mode.dirt:
             mode.ants.append(Ant(mode,x,y))
