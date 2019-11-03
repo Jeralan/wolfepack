@@ -15,15 +15,7 @@ class Ant(object):
         spriteSheet = mode.app.scaleImage(spriteSheet, 1/2)
         self.dir = 1
         self.spriteIndex = 0
-        self.sprites = []
-        for i in range(4):
-            dirSprites = []
-            for j in range(4):
-                sprite = spriteSheet.crop((32 * j, 32 * i,
-                                           32 * (j + 1), 32 * (i + 1)))
-                dirSprites.append(sprite)
-            self.sprites.append(dirSprites)
-        self.image = self.sprites[self.dir][self.spriteIndex]
+        self.image = mode.sprites[self.dir][self.spriteIndex]
     
     def getHashables(self):
         return self.id #colors are unique per particle type
@@ -37,9 +29,9 @@ class Ant(object):
     def check(self, other):
         pass
 
-    def move(self):
+    def move(self, mode):
         self.spriteIndex = (self.spriteIndex + 1) % 4
-        self.image = self.sprites[self.dir][self.spriteIndex]
+        self.image = mode.sprites[self.dir][self.spriteIndex]
         self.cy += self.dy
         self.cx += self.dx
 
@@ -70,7 +62,7 @@ class Ant(object):
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, 
-                            image=ImageTk.PhotoImage(self.image))
+                            image=self.image)
 
 def isPossible(mode,gridX,gridY):
     print(len(mode.burrows[0]),len(mode.burrows))
