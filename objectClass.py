@@ -40,20 +40,25 @@ class Ant(object):
     def move(self):
         self.spriteIndex = (self.spriteIndex + 1) % 4
         self.image = self.sprites[self.dir][self.spriteIndex]
-        self.cy += self.dy * 5 / 4
-        self.cx += self.dx * 5 / 4
+        self.cy += self.dy
+        self.cx += self.dx
 
     def changeDir(self, mode):
         newDir = random.randint(0, 3)
         self.dir = newDir
         if self.dir == 0:
-            self.dx, self.dy = 0, -1
+            pass
+            #self.dx, self.dy = 0, -1
         elif self.dir == 1:
             self.dx, self.dy = +1, 0
         elif self.dir == 2:
             self.dx, self.dy = 0, +1
         elif self.dir == 3:
             self.dx, self.dy = -1, 0
+        gridX = (self.cx-16)//32
+        gridY = (self.cy-16)//32
+        print(gridX,gridY,self.dx,self.dy)
+        mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, 
