@@ -57,7 +57,7 @@ class GameMode(Mode):
                 mode.wormCrawl.append(ImageTk.PhotoImage(sprite))
         
         mode.worms = []
-        for _ in range(1):
+        for _ in range(5):
             worm = Worm(mode, mode.app.width//2, mode.app.height, _)
             mode.worms.append(worm)
 
@@ -89,7 +89,8 @@ class GameMode(Mode):
                 mode.antCount += 1
         for worm in mode.worms:
             worm.move(mode)
-            print(worm.spriteIndex)
+            if (mode.time % 32) == 0:
+                worm.changeDir(mode)
         mode.time += 1
         
     def drawBurrows(mode,canvas):
