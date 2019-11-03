@@ -14,7 +14,7 @@ class dustGame(ModalApp):
 class GameMode(Mode):
     def appStarted(mode):
         mode.particles = []
-        mode.split = (2/3)*app.mode.height
+        mode.split = (2/3)*mode.app.height
 
     def mousePressed(mode,event):
         mode.particles.append(Particle(event.x,event.y))
@@ -25,12 +25,14 @@ class GameMode(Mode):
     def timerFired(mode):
         for particle in mode.particles:
             particle.move()
-            for OtherParticle in mode.particles:
-                if particle.collision(OtherParticle)
+            #for OtherParticle in mode.particles:
+             #   if particle.collision(OtherParticle)
     def redrawAll(mode,canvas):
         #drawCanvas()
+        canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
+                            fill="black")
         for particle in mode.particles:
-            particle.draw(canvas,mode)
+            particle.draw(canvas)
         
 
 class SplashScreenMode(Mode):
