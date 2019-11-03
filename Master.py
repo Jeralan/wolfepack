@@ -30,6 +30,7 @@ class GameMode(Mode):
         dirtImage = mode.app.loadImage('groundTexture.jpg')
         mode.dirtImage = mode.app.scaleImage(dirtImage, max(mode.app.height/1066,mode.app.width/1600))
         mode.dirtImage = ImageTk.PhotoImage(mode.dirtImage)
+
         spriteSheet = mode.app.loadImage('antSprites.png')
         spriteSheet = mode.app.scaleImage(spriteSheet, 1/2)
         deadImage = mode.app.loadImage('deadAntSprite.png')
@@ -46,6 +47,20 @@ class GameMode(Mode):
         mode.burrows = [([False]*(mode.app.height//32)) for r in range(mode.app.width//32)]
         mode.deadAnts = [([False]*(mode.app.height//32)) for r in range(mode.app.width//32)]
         mode.ants = []
+        
+        wormSpriteSheet = mode.app.loadImage('wormSprites.png')
+        mode.wormSpriteSheet = mode.app.scaleImage(wormSpriteSheet, 1/4)
+        mode.wormCrawl = []
+        for i in range(2, 4):
+            for j in range(8): 
+                sprite = mode.wormSpriteSheet.crop((j * 44, i * 44, (j + 1) * 44, (i + 1) * 44))
+                mode.wormCrawl.append(ImageTk.PhotoImage(sprite))
+        
+        mode.worms = []
+        for _ in range(1):
+            worm = Worm(mode, mode.app.width//2, mode.app.height, _)
+            mode.worms.append(worm)
+
         mode.time = 0
         mode.dirt = 32
 
@@ -60,23 +75,8 @@ class GameMode(Mode):
     def mousePressed(mode,event):
         mode.addAnt(event.x,event.y)
 
-    def keyPressed(mode,event):
-        for ant in mode.ants:
-            if event.key == 'Up':
-                ant.dir = 0
-                ant.dx, ant.dy = 0, -1
-            elif event.key == 'Right':
-                ant.dir = 1
-                ant.dx, ant.dy = +1, 0
-            elif event.key == 'Down':
-                ant.dir = 2
-                ant.dx, ant.dy = 0, +1
-            elif event.key == 'Left':
-                ant.dir = 3
-                ant.dx, ant.dy = -1, 0
-
     def timerFired(mode):
-        print(mode.time)
+        #print(mode.time)
         if mode.time%(4700) == 0:
             winsound.PlaySound("cmupie.wav",winsound.SND_ASYNC)
         mode.antCount = 0
@@ -87,6 +87,9 @@ class GameMode(Mode):
                 mode.antCount += 1
             else:
                 mode.antCount += 1
+        for worm in mode.worms:
+            worm.move(mode)
+            print(worm.spriteIndex)
         mode.time += 1
         
     def drawBurrows(mode,canvas):
@@ -115,6 +118,8 @@ class GameMode(Mode):
         mode.drawDeadAnts(canvas)
         for ant in mode.ants:
             ant.draw(canvas)
+        for worm in mode.worms:
+            worm.draw(canvas)
         canvas.create_text(0,mode.app.height,text=f"Score: {mode.score}",font=('Comic Sans MS',30,'bold italic underline'),
                             anchor = "sw")
 
