@@ -26,8 +26,14 @@ import random
 import winsound
 class GameMode(Mode):
     def appStarted(mode):
+        dirtImage = mode.app.loadImage('groundTexture.jpg')
+        mode.dirtImage = mode.app.scaleImage(dirtImage, max(mode.app.height/1066,mode.app.width/1600))
+        mode.dirtImage = ImageTk.PhotoImage(mode.dirtImage)
         spriteSheet = mode.app.loadImage('antSprites.png')
         spriteSheet = mode.app.scaleImage(spriteSheet, 1/2)
+        deadImage = mode.app.loadImage('deadAntSprite.png')
+        mode.deadImage = mode.app.scaleImage(deadImage, 1/25)
+        mode.deadImage = ImageTk.PhotoImage(mode.deadImage)
         mode.sprites = []
         for i in range(4):
             dirSprites = []
@@ -36,10 +42,8 @@ class GameMode(Mode):
                                            32 * (j + 1), 32 * (i + 1)))
                 dirSprites.append(ImageTk.PhotoImage(sprite))
             mode.sprites.append(dirSprites)
-
-
-        winsound.PlaySound("cmupie.wav",winsound.SND_ASYNC)
         mode.burrows = [([False]*(mode.app.height//32)) for r in range(mode.app.width//32)]
+        mode.deadAnts = [([False]*(mode.app.height//32)) for r in range(mode.app.width//32)]
         mode.ants = []
         mode.time = 0
         mode.dirt = 32
@@ -71,6 +75,9 @@ class GameMode(Mode):
                 ant.dx, ant.dy = -1, 0
 
     def timerFired(mode):
+        print(mode.time)
+        if mode.time%(7200) == 0:
+            winsound.PlaySound("cmupie.wav",winsound.SND_ASYNC)
         mode.antCount = 0
         while mode.antCount < len(mode.ants):
             mode.ants[mode.antCount].move(mode)
@@ -90,14 +97,21 @@ class GameMode(Mode):
                     cy = 16+row*32
                     canvas.create_rectangle(cx-r,cy-r,cx+r,cy+r,fill="black")
 
+    def drawDeadAnts(mode, canvas):
+        for col in range(len(mode.deadAnts)):
+            for row in range(len(mode.deadAnts[col])):
+                if mode.deadAnts[col][row]:
+                    cx = 16+col*32
+                    cy = 16+row*32
+                    canvas.loadImage(cx,cy,mode.deadImage)
+
     def redrawAll(mode,canvas):
         #drawCanvas()
         canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
                             fill="blue")
-        canvas.create_rectangle(0,mode.dirt,
-                mode.app.width,mode.app.height,fill=rgbString(155,118,83))
-        
+        canvas.create_image(mode.app.width/2,mode.dirt,image = mode.dirtImage,anchor="n")     
         mode.drawBurrows(canvas)
+        mode.drawDeadAnts(canvas)
         for ant in mode.ants:
             ant.draw(canvas)
 
