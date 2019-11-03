@@ -23,8 +23,22 @@ def rgbString(red, green, blue):
     return "#%02x%02x%02x" % (red, green, blue)
 
 import random
+import winsound
 class GameMode(Mode):
     def appStarted(mode):
+        spriteSheet = mode.app.loadImage('antSprites.png')
+        spriteSheet = mode.app.scaleImage(spriteSheet, 1/2)
+        mode.sprites = []
+        for i in range(4):
+            dirSprites = []
+            for j in range(4):
+                sprite = spriteSheet.crop((32 * j, 32 * i,
+                                           32 * (j + 1), 32 * (i + 1)))
+                dirSprites.append(ImageTk.PhotoImage(sprite))
+            mode.sprites.append(dirSprites)
+
+
+        winsound.PlaySound("cmupie.wav",winsound.SND_ASYNC)
         mode.burrows = [([False]*(mode.app.height//32)) for r in range(mode.app.width//32)]
         mode.ants = []
         mode.time = 0
@@ -59,7 +73,7 @@ class GameMode(Mode):
     def timerFired(mode):
         mode.antCount = 0
         while mode.antCount < len(mode.ants):
-            mode.ants[mode.antCount].move()
+            mode.ants[mode.antCount].move(mode)
             if (mode.time - mode.ants[mode.antCount].id) % 32 == 0:
                 mode.ants[mode.antCount].changeDir(mode)
                 mode.antCount += 1
