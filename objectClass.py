@@ -113,9 +113,40 @@ class Worm(object):
     def __eq__(self, other):
         return ( type(other) == type(self) ) and self.id == other.id
 
+    def changeDir(self, mode):
+        gridX = (self.cx-16)//32
+        gridY = (self.cy-16)//32
+        directions = [0,1,2,3]
+        newDir = random.choice(directions)
+        newDx,newDy = getCoords(newDir)
+        newGridX,newGridY = gridX+newDx,gridY+newDy
+        die = False
+        while not isPossible(mode,newGridX,newGridY):
+            directions.remove(newDir)
+            if len(directions) == 1:
+                mode.ants.remove(self)
+                die = True
+                mode.deadAnts[gridX][gridY] = True
+                mode.antCount -= 1
+                break
+            else:
+                newDir = random.choice(directions)
+                newDx,newDy = getCoords(newDir)
+                newGridX,newGridY = gridX+newDx,gridY+newDy
+
+        self.dir = newDir
+        self.dx,self.dy = newDx, newDy
+
+    def isPossible(mode,gridX,gridY):
+        if gridX < 0 or gridY < 0 or gridY >= len(mode.burrows[0]) or gridX >= len(mode.burrows):
+            return False
+        else: return True
+
     def move(self, mode):
         self.spriteIndex = (self.spriteIndex + 1) % len(self.sprites)
         self.image = self.sprites[self.spriteIndex]
+        self.cx += self.dx
+        self.cy += self.dy
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, image=self.image, anchor='s')
