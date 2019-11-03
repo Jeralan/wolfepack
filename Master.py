@@ -25,6 +25,7 @@ def rgbString(red, green, blue):
 import random
 class GameMode(Mode):
     def appStarted(mode):
+        mode.burrows = [([False]*(mode.app.width//32)) for r in range(mode.app.height//32)]
         mode.ants = []
         mode.time = 0
         mode.dirt = 32
@@ -40,11 +41,23 @@ class GameMode(Mode):
     def mousePressed(mode,event):
         mode.addAnt(event.x,event.y)
 
+    def keyPressed(mode,event):
+        for ant in mode.ants:
+
     def timerFired(mode):
         mode.time += 1
         #for ant in mode.ants:
             #ant.move()
     
+    def drawBurrows(mode)
+        r = 17
+        for col in range(len(mode.burrows())):
+            for row in range(len(col)):
+                if mode.burrows[col][row]:
+                    cx = 16+col*32
+                    cy = 16+row*32
+                    canvas.create_oval(cx-r,cy-r,cx+r,)
+
     def redrawAll(mode,canvas):
         #drawCanvas()
         canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
@@ -52,8 +65,11 @@ class GameMode(Mode):
         canvas.create_rectangle(0,mode.dirt,
                 mode.app.width,mode.app.height,fill=rgbString(155,118,83))
         
+        mode.drawBurrows()
         for ant in mode.ants:
             ant.draw(canvas)
+
+        
         
 
 class SplashScreenMode(Mode):
