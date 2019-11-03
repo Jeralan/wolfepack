@@ -116,7 +116,7 @@ class Worm(object):
     def changeDir(self, mode):
         gridX = (self.cx-16)//32
         gridY = (self.cy-16)//32
-        directions = [0,1,2,3]
+        directions = [0,0,0,1,2,3]
         newDir = random.choice(directions)
         newDx,newDy = getCoords(newDir)
         newGridX,newGridY = gridX+newDx,gridY+newDy
@@ -147,6 +147,15 @@ class Worm(object):
         self.image = self.sprites[self.spriteIndex]
         self.cx += self.dx
         self.cy += self.dy
+        count = 0
+        while count < len(mode.ants):
+            if abs(mode.ants[count].cx-self.cx) < 32 and abs(mode.ants[count].cy-self.cy) < 32:          
+                gridX = (mode.ants[count].cx-16)//32
+                gridY = (mode.ants[count].cy-16)//32
+                mode.deadAnts[gridX][gridY] = True
+                mode.ants.remove(mode.ants[count])
+            else:
+                count += 1
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, image=self.image, anchor='s')
