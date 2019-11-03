@@ -122,6 +122,10 @@ class GameMode(Mode):
         
 
 class SplashScreenMode(Mode):
+    def appStarted(mode):
+        winsound.PlaySound("antsAudio1.wav",winsound.SND_ASYNC)
+        mode.loopTime = 0
+
     def keyPressed(mode, event):
         #checks if help keys are inputted but otherwise 
         #plays the game if any key is pressed
@@ -130,6 +134,12 @@ class SplashScreenMode(Mode):
         #elif event.key == "h":
             #mode.app.setActiveMode(mode.app.helpMode)
         mode.app.setActiveMode(mode.app.gameMode)
+
+    def timerFired(mode):
+        if mode.loopTime % 800 == 0:
+            winsound.PlaySound("antsAudio1.wav",winsound.SND_ASYNC)
+        mode.loopTime += 1
+
 
     def redrawAll(mode,canvas):
         #Tells the player to press a key to start the game or
@@ -155,7 +165,7 @@ class HelpMode(Mode):
     pass
 
 def runWolfePack():
-    dustGame(width=600,height=600)
+    dustGame(width=640,height=640)
 
 def main():
     runWolfePack()
