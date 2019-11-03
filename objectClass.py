@@ -44,22 +44,51 @@ class Ant(object):
         self.cx += self.dx
 
     def changeDir(self, mode):
-        newDir = random.randint(0, 3)
-        self.dir = newDir
-        if self.dir == 0:
-            pass
-            #self.dx, self.dy = 0, -1
-        elif self.dir == 1:
-            self.dx, self.dy = +1, 0
-        elif self.dir == 2:
-            self.dx, self.dy = 0, +1
-        elif self.dir == 3:
-            self.dx, self.dy = -1, 0
         gridX = (self.cx-16)//32
         gridY = (self.cy-16)//32
-        print(gridX,gridY,self.dx,self.dy)
-        mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
+        directions = [0,1,2,3]
+        newDir = random.choice(directions)
+        newDx,newDy = getCoords(newDir)
+        newGridX,newGridY = gridX+newDx,gridY+newDy
+        die = False
+        while not isPossible(mode,newGridX,newGridY):
+            directions.remove(newDir)
+            if len(directions) == 1:
+                mode.ants.remove(self)
+                die = True
+                break
+            else:
+                newDir = random.choice(directions)
+                newDx,newDy = getCoords(newDir)
+                newGridX,newGridY = gridX+newDx,gridY+newDy
+
+        self.dir = newDir
+        self.dx,self.dy = newDx, newDy
+        if (gridY+self.dy) >= 1 and not die:
+            mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, 
                             image=ImageTk.PhotoImage(self.image))
+
+def isPossible(mode,gridX,gridY):
+    if gridX < 0 or gridY < 0 or gridY >= len(mode.burrows[0]) or gridX >= len(mode.burrows):
+        return False
+    elif mode.burrows[gridX][gridY]:
+        return True
+    elif mode.burrows[max(gridX-1,0)][gridY]+mode.burrows[gridX][max(gridY-1,0)]+mode.burrows[min(gridX+1,len(mode.burrows)-1)][gridY]+mode.burrows[gridX][min(gridY+1,len(mode.burrows[0])-1)] > 1:
+        return False
+    else:
+        return True
+
+
+def getCoords(newDir):
+        if newDir == 0:
+            newDx, newDy = 0,-1
+        elif newDir == 1:
+            newDx, newDy = +1, 0
+        elif newDir == 2:
+            newDx, newDy = 0, +1
+        elif newDir == 3:
+            newDx, newDy = -1, 0
+        return newDx,newDy
