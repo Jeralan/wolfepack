@@ -53,7 +53,7 @@ class GameMode(Mode):
         mode.wormCrawl = []
         for i in range(2, 4):
             for j in range(8): 
-                sprite = mode.wormSpriteSheet.crop((j * 44, i * 44, (j + 1) * 44, (i + 1) * 44))
+                sprite = mode.wormSpriteSheet.crop((j * 50, i * 45, (j + 1) * 50, (i + 1) * 45))
                 mode.wormCrawl.append(ImageTk.PhotoImage(sprite))
         
         mode.worms = []
