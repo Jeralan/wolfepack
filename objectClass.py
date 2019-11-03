@@ -115,6 +115,7 @@ class Worm(object):
 
     def move(self, mode):
         self.spriteIndex = (self.spriteIndex + 1) % len(self.sprites)
+        self.image = self.sprites[self.spriteIndex]
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, image=self.image, anchor='s')
