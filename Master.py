@@ -55,10 +55,7 @@ class GameMode(Mode):
             for j in range(8): 
                 sprite = mode.wormSpriteSheet.crop((j * 50, i * 45, (j + 1) * 50, (i + 1) * 45))
                 mode.wormCrawl.append(ImageTk.PhotoImage(sprite))
-        mode.wormAttack = []
-        for i in range(6):
-            sprite = mode.wormSpriteSheet.crop((i * 50, 180, (i + 1) * 50, 225))
-            mode.wormAttack.append(sprite)
+        
         mode.worms = []
         for _ in range(5):
             worm = Worm(mode, mode.app.width//2, mode.app.height, _)
@@ -120,12 +117,10 @@ class GameMode(Mode):
         canvas.create_image(mode.app.width/2,mode.dirt,image = mode.dirtImage,anchor="n")     
         mode.drawBurrows(canvas)
         mode.drawDeadAnts(canvas)
-
-        for worm in mode.worms:
-            worm.draw(canvas)
         for ant in mode.ants:
             ant.draw(canvas)
-        
+        for worm in mode.worms:
+            worm.draw(canvas)
         canvas.create_text(0,mode.app.height,text=f"Score: {mode.score}",font=('Comic Sans MS',30,'bold italic underline'),
                             anchor = "sw")
 
