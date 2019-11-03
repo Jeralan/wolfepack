@@ -25,7 +25,7 @@ def rgbString(red, green, blue):
 import random
 class GameMode(Mode):
     def appStarted(mode):
-        mode.burrows = [([False]*(mode.app.width//32)) for r in range(mode.app.height//32)]
+        mode.burrows = [([False]*(mode.app.height//32)) for r in range(mode.app.width//32)]
         mode.ants = []
         mode.time = 0
         mode.dirt = 32
@@ -57,10 +57,14 @@ class GameMode(Mode):
                 ant.dx, ant.dy = -1, 0
 
     def timerFired(mode):
-        for ant in mode.ants:
-            ant.move()
-            if (mode.time - ant.id) % 32 == 0:
-                ant.changeDir(mode)
+        mode.antCount = 0
+        while mode.antCount < len(mode.ants):
+            mode.ants[mode.antCount].move()
+            if (mode.time - mode.ants[mode.antCount].id) % 32 == 0:
+                mode.ants[mode.antCount].changeDir(mode)
+                mode.antCount += 1
+            else:
+                mode.antCount += 1
         mode.time += 1
         
     def drawBurrows(mode,canvas):
