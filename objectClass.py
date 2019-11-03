@@ -59,7 +59,9 @@ class Ant(object):
         self.dir = newDir
         self.dx,self.dy = newDx, newDy
         if (gridY+self.dy) >= 1 and not die:
-            mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
+            if not mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)]:
+                mode.burrows[int(gridX+self.dx)][int(gridY+self.dy)] = True
+                mode.score += 1
 
     def draw(self, canvas):
         canvas.create_image(self.cx, self.cy, 
