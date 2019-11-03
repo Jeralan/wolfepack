@@ -57,10 +57,12 @@ class GameMode(Mode):
                 ant.dx, ant.dy = -1, 0
 
     def timerFired(mode):
-        mode.time += 1
         for ant in mode.ants:
             ant.move()
-    
+            if (mode.time - ant.id) % 80 == 0:
+                ant.changeDir(mode)
+        mode.time += 1
+        
     def drawBurrows(mode):
         r = 17
         # for col in range(len(mode.burrows())):
