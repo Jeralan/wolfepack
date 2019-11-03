@@ -23,7 +23,12 @@ class GameMode(Mode):
         mode.dirt = 1/10
 
     def addAnt(mode,x,y):
-        mode.ants.append(Ant(mode,x,y))
+        x,y = x-16,y-16
+        x= roundHalfUp(x/32)*32
+        y= roundHalfUp(x/32)*32
+        x,y = x+16,y+16
+        if y < mode.app.height*mode.dirt:
+            mode.ants.append(Ant(mode,x,y))
 
     def mousePressed(mode,event):
         mode.addAnt(event.x,event.y)
@@ -36,7 +41,7 @@ class GameMode(Mode):
     def redrawAll(mode,canvas):
         #drawCanvas()
         canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
-                            fill="black")
+                            fill="blue")
         canvas.create_rectangle(0,mode.app.height*mode.dirt,
                 mode.app.width,mode.app.height,fill=rgbString(155,118,83))
         
