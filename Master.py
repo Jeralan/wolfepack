@@ -43,20 +43,32 @@ class GameMode(Mode):
 
     def keyPressed(mode,event):
         for ant in mode.ants:
+            if event.key == 'Up':
+                ant.dir = 0
+                ant.dx, ant.dy = 0, -1
+            elif event.key == 'Right':
+                ant.dir = 1
+                ant.dx, ant.dy = +1, 0
+            elif event.key == 'Down':
+                ant.dir = 2
+                ant.dx, ant.dy = 0, +1
+            elif event.key == 'Left':
+                ant.dir = 3
+                ant.dx, ant.dy = -1, 0
 
     def timerFired(mode):
         mode.time += 1
-        #for ant in mode.ants:
-            #ant.move()
+        for ant in mode.ants:
+            ant.move()
     
-    def drawBurrows(mode)
+    def drawBurrows(mode):
         r = 17
-        for col in range(len(mode.burrows())):
-            for row in range(len(col)):
-                if mode.burrows[col][row]:
-                    cx = 16+col*32
-                    cy = 16+row*32
-                    canvas.create_oval(cx-r,cy-r,cx+r,)
+        # for col in range(len(mode.burrows())):
+        #     for row in range(len(col)):
+        #         if mode.burrows[col][row]:
+        #             cx = 16+col*32
+        #             cy = 16+row*32
+        #             canvas.create_oval(cx-r,cy-r,cx+r,)
 
     def redrawAll(mode,canvas):
         #drawCanvas()
