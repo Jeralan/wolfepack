@@ -9,30 +9,39 @@ class dustGame(ModalApp):
         app.gameMode = GameMode()
         app.helpMode = HelpMode()
         app.setActiveMode(app.splashScreenMode)
-        app.timerDelay = 25
+        app.timerDelay = 50
 
+def rgbString(red, green, blue):
+    # Don't worry about how this code works yet.
+    return "#%02x%02x%02x" % (red, green, blue)
+
+import random
 class GameMode(Mode):
     def appStarted(mode):
-        mode.particles = []
-        mode.split = (2/3)*mode.app.height
+        mode.ants = []
+        mode.time = 0
+        mode.dirt = 1/10
+
+    def addAnt(mode,x,y):
+        mode.ants.append(Particle(mode,x,y))
 
     def mousePressed(mode,event):
-        mode.particles.append(Particle(event.x,event.y))
-    
-    def mouseDragged(mode,event):
-        mode.particles.append(Particle(event.x,event.y))
+        mode.addAnt(event.x,event.y)
 
     def timerFired(mode):
-        for particle in mode.particles:
-            particle.move()
-            #for OtherParticle in mode.particles:
-             #   if particle.collision(OtherParticle)
+        mode.time += 1
+        for ant in mode.ants:
+            ant.move()
+    
     def redrawAll(mode,canvas):
         #drawCanvas()
         canvas.create_rectangle(0,0,mode.app.width,mode.app.height,
                             fill="black")
-        for particle in mode.particles:
-            particle.draw(canvas)
+        canvas.create_rectangle(0,mode.app.height*mode.dirt,
+                mode.app.width,mode.app.height,fill=rgbString(155,118,83))
+        
+        for ant in mode.ants:
+            ant.draw(canvas)
         
 
 class SplashScreenMode(Mode):
